@@ -1,0 +1,4 @@
+# Ignore specific directories
+3D-Human-Body-Generator/p_m_c/pix2surf/assets/
+3D-Human-Body-Generator/p_m_c/pix2surf/pretrained/
+

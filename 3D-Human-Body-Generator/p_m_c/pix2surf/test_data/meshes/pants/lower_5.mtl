@@ -1,0 +1,13 @@
+# Blender 4.2.2 LTS MTL File: 'DG100110.blend'
+# www.blender.org
+
+newmtl Material889753
+Ns 127.999992
+Ka 1.000000 1.000000 1.000000
+Ks 0.480000 0.480000 0.480000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /Users/phun/Downloads/OBJ/OBJ Single Object/DG100110_diffuse_1001.png
+map_Bump -bm 1.000000 /Users/phun/Downloads/OBJ/OBJ Single Object/DG100110_normal_1001.png

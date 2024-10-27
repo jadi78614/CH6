@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Body Generator</title>
+</head>
+<body>
+    <div style="flex-direction: row; display:flex; margin: 2%;  justify-content: center; background-color:#e3e3e3">
+        <div style="width:30%; margin:2%;">
+            <form>
+                <div class="form-group">
+                    <label for="head">Head</label>
+                    <input type="number" class="form-control" id="head" value="0.95" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="torso">Torso</label>
+                    <input type="number" class="form-control" id="torso" value="0.85" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="hips">Hips</label>
+                    <input type="number" class="form-control" id="hips" value="1.10" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="legs">Legs</label>
+                    <input type="number" class="form-control" id="legs" value="1.10" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="calves">Calves</label>
+                    <input type="number" class="form-control" id="calves" value="0.90" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="shoulders">Shoulders</label>
+                    <input type="number" class="form-control" id="shoulders" value="0.80" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="arms">Arms</label>
+                    <input type="number" class="form-control" id="arms" value="0.85" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="forearms">Forearms</label>
+                    <input type="number" class="form-control" id="forearms" value="0.85" step=".01" min="0.01" max="2">
+                </div>
+                <div class="form-group">
+                    <label for="height">Height</label>
+                    <input type="number" class="form-control" id="height" value="0.95" step=".01" min="0.5" max="2.5">
+                </div>
+                <button type="button" onclick="onSubmit()" class="btn btn-primary">Generate</button>
+            </form>
+        </div>
+        <div style="">
+        <model-viewer style="height:850px; width:500px" src="/pythonscripts/projectexports/generatedbody.glb" alt="Generated human body"
+                      ar ar-modes="webxr scene-viewer quick-look" environment-image="neutral" auto-rotate camera-controls></model-viewer>
+        </div>
+    </div>
+
+    <script>
+  function onSubmit() {
+    var height = document.getElementById("height").value;
+    var torso = document.getElementById("torso").value;
+    var head = document.getElementById("head").value;
+    var shoulders = document.getElementById("shoulders").value;
+    var legs = document.getElementById("legs").value;
+    var calves = document.getElementById("calves").value;
+    var hips = document.getElementById("hips").value;
+    var arms = document.getElementById("arms").value;
+    var forearms = document.getElementById("forearms").value;
+
+    var measurements = {
+        height: height,
+        torso: torso,
+        head: head,
+        shoulders: shoulders,
+        legs: legs,
+        calves: calves,
+        hips: hips,
+        arms: arms,
+        forearms: forearms
+    };
+
+    console.log(measurements);
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:5000/',
+        data: JSON.stringify(measurements),
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(data) {
+            console.log("Response from server:", data);
+            if (data.status === "success") {
+                // Create a new model viewer instance to ensure it loads the new model
+                const newModelViewer = document.createElement('model-viewer');
+                newModelViewer.src = '/pythonscripts/projectexports/generatedbody.glb?' + new Date().getTime();
+                newModelViewer.setAttribute('alt', '3D Model');
+                newModelViewer.setAttribute('auto-rotate', '');
+                newModelViewer.setAttribute('camera-controls', '');
+
+                // Replace the old model viewer with the new one
+                const oldModelViewer = document.querySelector('model-viewer');
+                oldModelViewer.parentNode.replaceChild(newModelViewer, oldModelViewer);
+            } else {
+                console.error("Model generation failed:", data.message);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("AJAX error:", textStatus, errorThrown);
+        }
+    });
+
+
+
+    setTimeout(function() {
+                location.reload(true); // Reloads the page from the server
+            }, 2500); 
+
+
+
+}
+
+
+    </script>
+</body>
+</html>
